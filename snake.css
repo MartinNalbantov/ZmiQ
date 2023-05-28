@@ -1,4 +1,10 @@
+body {
+    background-image: url("Images/Field.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 body{
     font-family:'Courier New', Courier, monospace;
     text-align: center;
 }
+
