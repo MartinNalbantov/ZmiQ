@@ -20,8 +20,11 @@ let changingDirection = false;
 // Score counter
 let score = 0;
 
-let head;
+let currentHead;
 
+const eatAudio = new Audio('Audio/Eat1.m4a');
+
+const crashAudio = new Audio('Audio/Crash2.m4a');
 
 const boardPic = new Image();
 boardPic.src = 'Images/BoardFigma.png';
@@ -29,12 +32,24 @@ boardPic.src = 'Images/BoardFigma.png';
 const foodPic = new Image();
 foodPic.src = 'Images/Apple.png'
 
-const snakeHeadPic = new Image();
-snakeHeadPic.src = 'Images/SnakeHead.png'
+const snakeHeadPicRight = new Image();
+snakeHeadPicRight.src = 'Images/SnakeHeadRight.png'
+
+const snakeHeadPicUp = new Image();
+snakeHeadPicUp.src = 'Images/SnakeHeadUp.png'
+
+const snakeHeadPicDown = new Image();
+snakeHeadPicDown.src = 'Images/SnakeHeadDown.png'
+
+const snakeHeadPicLeft = new Image();
+snakeHeadPicLeft.src = 'Images/SnakeHeadLeft.png'
+
+const bodyPic = new Image();
+bodyPic.src = 'Images/Body.png'
 
 
 // Main update loop
-function update() {
+ function update() {
 
 // Clear the canvas
 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -42,57 +57,75 @@ context.clearRect(0, 0, canvas.width, canvas.height);
 // Draw the background image
 context.drawImage(boardPic, 0, 0, canvas.width, canvas.height);
 
-  head = {x: snake[0].x, y: snake[0].y};
-  
+ let currentHead = { x: snake[0].x, y: snake[0].y };
+
   // Snake movement 
-  switch (direction) {
+  switch (direction) 
+  {
     case "up":
-      head.y -= 1;
+      currentHead.y -= 1;
       break;
     case "down":
-      head.y += 1;
+      currentHead.y += 1;
       break;
     case "left":
-      head.x -= 1;
+      currentHead.x -= 1;
       break;
     case "right":
-      head.x += 1;
+      currentHead.x += 1;
       break;
   }
-  snake.unshift(head);
+  snake.unshift(currentHead);
 
   // Check for collision with the food
-  if (head.x == foodLocation.x && head.y == foodLocation.y) {
+  if (currentHead.x == foodLocation.x && currentHead.y == foodLocation.y) {
     foodLocation = {x: Math.floor(Math.random() * canvas.width / squareSize), y: Math.floor(Math.random() * canvas.height / squareSize)};
     score++; // Increase the score when the snake eats the food
+    eatAudio.play();
   } else {
     snake.pop();
   }
 
   // Check for collision with the walls
-  if (head.x < 0 || head.y < 0 || head.x >= canvas.width / squareSize || head.y >= canvas.height / squareSize) {
+  if (currentHead.x < 0 || currentHead.y < 0 || currentHead.x >= canvas.width / squareSize || currentHead.y >= canvas.height / squareSize) {
+    crashAudio.play();
     clearInterval(intervalId);
     alert("Wall collision! Your score: " + score);
   }
 
   // Check for collision with the snake's body
   for (var i = 1; i < snake.length; i++) {
-    if (head.x == snake[i].x && head.y == snake[i].y) {
+    if (currentHead.x == snake[i].x && currentHead.y == snake[i].y) {
       clearInterval(intervalId);
       alert("You hit your body! Your score: " + score);
     }
   }
 
   //Snake filling
-  for (var i = 0; i < snake.length; i++) {
-    // context.fillRect(snake[i].x * squareSize, snake[i].y * squareSize, squareSize, squareSize);
-    context.drawImage(snakeHeadPic,snake[i].x * squareSize, snake[i].y * squareSize, squareSize, squareSize)
+  switch(direction)
+  {
+    case "right":
+      context.drawImage(snakeHeadPicRight,snake[0].x * squareSize, snake[0].y * squareSize, squareSize, squareSize)
+  break;
+  case "left":
+    context.drawImage(snakeHeadPicLeft,snake[0].x * squareSize, snake[0].y * squareSize, squareSize, squareSize)
+  break;
+  case "up":
+  
+  context.drawImage(snakeHeadPicUp,snake[0].x * squareSize, snake[0].y * squareSize, squareSize, squareSize)
+
+  break;
+  case "down":
+      context.drawImage(snakeHeadPicDown,snake[0].x * squareSize, snake[0].y * squareSize, squareSize, squareSize)
+    break;
+  }
+  for (var i = 1; i < snake.length; i++)
+   {
+    context.drawImage(bodyPic,snake[i].x * squareSize, snake[i].y * squareSize, squareSize, squareSize)
   }
 
   // Food filling 
   context.drawImage(foodPic,foodLocation.x*squareSize,foodLocation.y*squareSize)
- 
-
 
   // Display the score
   context.fillStyle = "white";
@@ -103,7 +136,7 @@ context.drawImage(boardPic, 0, 0, canvas.width, canvas.height);
 }
 
 // Start the update loop
-let intervalId = setInterval(update, 70);
+let intervalId = setInterval(update, 80);
 
 
 // Check for keyboard events to change the direction of the snake
