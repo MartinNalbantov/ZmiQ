@@ -1,5 +1,7 @@
 let canvas = document.getElementById("canvas");
+let canvas1 = document.getElementById("canvas1");
 let context = canvas.getContext("2d");
+let ctx = canvas1.getContext("2d");
 
 
 // Size of each square
@@ -46,6 +48,9 @@ snakeHeadPicLeft.src = 'Images/SnakeHeadLeft.png'
 
 const bodyPic = new Image();
 bodyPic.src = 'Images/Body.png'
+
+const scorePic = new Image();
+scorePic.src= 'Images/Score.png'
 
 
 // Main update loop
@@ -96,6 +101,7 @@ context.drawImage(boardPic, 0, 0, canvas.width, canvas.height);
   // Check for collision with the snake's body
   for (var i = 1; i < snake.length; i++) {
     if (currentHead.x == snake[i].x && currentHead.y == snake[i].y) {
+      crashAudio.play();
       clearInterval(intervalId);
       alert("You hit your body! Your score: " + score);
     }
@@ -128,9 +134,13 @@ context.drawImage(boardPic, 0, 0, canvas.width, canvas.height);
   context.drawImage(foodPic,foodLocation.x*squareSize,foodLocation.y*squareSize)
 
   // Display the score
-  context.fillStyle = "white";
-  context.font = "25px Nunito";
-  context.fillText("Score: " + score, 10, 20);
+  
+  ctx.drawImage(scorePic,0 , 0, 160, 120);
+  ctx.fillStyle = "black";
+  ctx.font = "50px Rockwell";
+  ctx.fillText(score,100,80);
+  
+
 
   changingDirection = false;
 }
