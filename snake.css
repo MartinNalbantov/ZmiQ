@@ -7,7 +7,7 @@ canvas {
 #canvas1{
   position: absolute;
   top: 55%;
-  left: 90%;
+  left: 85%;
   transform: translate(-50%, -50%);
 }
 body {
